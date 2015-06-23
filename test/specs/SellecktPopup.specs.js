@@ -457,11 +457,13 @@ function sellecktPopupSpecs(SellecktPopup, templateUtils, $, _, Mustache){
             var $opener;
             var offsetStub;
             var renderItemsSpy;
+            var attachResizeHandlerStub;
 
             beforeEach(function(){
                 bindEventsStub = sandbox.stub(SellecktPopup.prototype, 'bindEvents');
                 positionStub = sandbox.stub(SellecktPopup.prototype, '_positionPopup');
                 renderItemsSpy = sandbox.spy(SellecktPopup.prototype, 'renderItems');
+                attachResizeHandlerStub = sandbox.stub(SellecktPopup.prototype, '_attachResizeHandler');
 
                 items = [
                     {label: 'item 1', value: 1},
@@ -486,6 +488,11 @@ function sellecktPopupSpecs(SellecktPopup, templateUtils, $, _, Mustache){
             });
 
             it('creates a handler for window.resize and adds it as this.resizeHandler', function(){
+                attachResizeHandlerStub.restore();
+                sandbox.stub(_, 'throttle', function(func) {
+                    return func;
+                });
+
                 popup = new SellecktPopup();
                 popup.open($opener, items);
 
